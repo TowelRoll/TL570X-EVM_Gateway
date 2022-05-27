@@ -1,0 +1,440 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />    
+    <title>赣星智能网关</title>
+    <meta name="author" content="Tr.">
+</head>
+
+<script type="text/javascript">
+
+function set_do(status)
+{
+    var xmlhttp;
+
+    // alert("123");
+
+    if(window.XMLHttpRequest)
+    {
+        //code for IE7+,Firefox,Chrome,Opera,Safari
+        xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {
+        //code for IE6,IE5
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function()
+    {
+        if(xmlhttp.readyState==4 && xmlhttp.status==200)
+        {
+            // alert(xmlhttp.responseText);
+            document.getElementById("txtIDA").innerHTML = xmlhttp.responseText;  
+        }
+    }
+    xmlhttp.open("POST", "cgi-bin/dodi.sh", true);
+    xmlhttp.send("DO_Status="+status);
+}
+
+setInterval(function(){
+    var xmlhttp;
+
+    if(window.XMLHttpRequest)
+    {
+        //code for IE7+,Firefox,Chrome,Opera,Safari
+        xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {
+        //code for IE6,IE5
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function()
+    {
+        if(xmlhttp.readyState==4 && xmlhttp.status==200)
+        {
+            document.getElementById("DI_Status").value = xmlhttp.responseText;  
+        }
+    }
+    xmlhttp.open("GET", "cgi-bin/dodi.sh?DI_Status", true);
+    xmlhttp.send();
+}, 1000)
+
+function checkLoginTime()
+{
+    var loginTime = sessionStorage.getItem("loginTime");
+    var nowTime = (new Date()).valueOf();
+
+
+    var isHidden = document.hidden;
+     if(isHidden){
+
+     } else {
+        var date = (new Date()).valueOf();//当前时间戳
+        sessionStorage.setItem("loginTime", date);
+     }
+
+    if(nowTime - loginTime > 30*60000)//ms
+    {
+        alert("超时");
+        location.href = "/";
+    }
+}
+setInterval(function(){checkLoginTime()}, 1000)
+
+
+function getVer()
+{
+    var xmlhttp;
+
+    if(window.XMLHttpRequest)
+    {
+        //code for IE7+,Firefox,Chrome,Opera,Safari
+        xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {
+        //code for IE6,IE5
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function()
+    {
+        if(xmlhttp.readyState==4 && xmlhttp.status==200)
+        {
+          document.getElementById("soft_ver").innerHTML=xmlhttp.responseText;
+            // alert(xmlhttp.responseText); 
+        }
+    }
+    xmlhttp.open("POST","cgi-bin/update.sh", true);
+    xmlhttp.send("GETVER");
+}
+setTimeout(getVer, 100);
+
+function updateVer()
+{
+    var xmlhttp;
+
+    if(window.XMLHttpRequest)
+    {
+        //code for IE7+,Firefox,Chrome,Opera,Safari
+        xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {
+        //code for IE6,IE5
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function()
+    {
+        if(xmlhttp.readyState==4 && xmlhttp.status==200)
+        {
+          alert(xmlhttp.responseText); 
+          getVer();
+        }
+    }
+    xmlhttp.open("POST","cgi-bin/update.sh", true);
+    xmlhttp.send("UPDATE");
+}
+
+function fileSelected() {
+    var file = document.getElementById('fileToUpload').files[0];
+    if (file) {
+      var fileSize = 0;
+      if (file.size > 1024 * 1024)
+        fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
+      else
+        fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
+
+      document.getElementById('fileName').innerHTML = 'Name: ' + file.name;
+      document.getElementById('fileSize').innerHTML = 'Size: ' + fileSize;
+      document.getElementById('fileType').innerHTML = 'Type: ' + file.type;
+    }
+  }
+
+function uploadFile() {
+    if(document.getElementById('fileToUpload').files[0] == null)
+    {
+        alert("文件未上传");
+        return 0;
+    }
+
+    if(document.getElementById('fileToUpload').files[0].name.indexOf(".deb") == -1)
+    {
+        alert("上传文件错误，请上传.deb文件");
+        return 0;
+    }
+
+    var fd = new FormData();
+    fd.append("file", document.getElementById('fileToUpload').files[0]);
+    var xhr = new XMLHttpRequest();
+    xhr.upload.addEventListener("progress", uploadProgress, false);
+    xhr.addEventListener("load", uploadComplete, false);
+    xhr.addEventListener("error", uploadFailed, false);
+    xhr.addEventListener("abort", uploadCanceled, false);
+    xhr.open("POST", "cgi-bin/downfile.cgi");
+    xhr.send(fd);
+}
+
+function uploadProgress(evt) {
+    if (evt.lengthComputable) {
+      var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+      document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
+    }
+    else {
+      document.getElementById('progressNumber').innerHTML = 'unable to compute';
+    }
+}
+
+  function uploadComplete(evt) {
+    /* This event is raised when the server send back a response */
+    alert(evt.target.responseText);
+    updateVer();
+  }
+
+  function uploadFailed(evt) {
+    alert("There was an error attempting to upload the file.");
+  }
+
+  function uploadCanceled(evt) {
+    alert("The upload has been canceled by the user or the browser dropped the connection.");
+  }
+
+function get_info()
+{
+    var xmlhttp;
+
+    var id = document.getElementById("id").value;
+    var table = document.getElementById("table").value;
+
+    if(id == "" || table == "")
+    {
+        alert("ID Table 输入不能为空！");
+        return;
+    }
+
+    if(window.XMLHttpRequest)
+    {
+        //code for IE7+,Firefox,Chrome,Opera,Safari
+        xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {
+        //code for IE6,IE5
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function()
+    {
+        if(xmlhttp.readyState==4 && xmlhttp.status==200)
+        {
+            document.getElementById("txtIDA").innerHTML=xmlhttp.responseText;
+            var text = xmlhttp.responseText;
+            var obj = JSON.parse(text);
+            // alert(obj["flag"]);
+            document.getElementById("flag").value = obj["flag"];
+            document.getElementById("addr").value = obj["addr"];
+            document.getElementById("register").value = obj["register"];
+            document.getElementById("nums").value = obj["nums"];
+        }
+    }
+    xmlhttp.open("GET", "cgi-bin/modbus.cgi?id=" + id + ",table=" + table, true);
+    xmlhttp.send();
+}
+
+function set_info()
+{
+    var xmlhttp;
+
+    var id = document.getElementById("id").value;
+    var flag = document.getElementById("flag").value;
+    var addr = document.getElementById("addr").value;
+    var register = document.getElementById("register").value;
+    var nums = document.getElementById("nums").value;
+    var table = document.getElementById("table").value;
+
+    if(id == "" || flag == "" || addr == "" || register == "" || nums == "" || table == "")
+    {
+        alert("输入不能为空！");
+        return;
+    }
+
+    if(window.XMLHttpRequest)
+    {
+        //code for IE7+,Firefox,Chrome,Opera,Safari
+        xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {
+        //code for IE6,IE5
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function()
+    {
+        if(xmlhttp.readyState==4 && xmlhttp.status==200)
+        {
+            document.getElementById("txtIDA").innerHTML=xmlhttp.responseText;
+        }
+    }
+    xmlhttp.open("POST","cgi-bin/modbus.cgi",true);
+    xmlhttp.send("id=" + id + ",flag=" + flag + ",addr=" + addr
+            + ",register=" + register + ",nums=" + nums + ",table=" + table);
+}
+
+function update()
+{
+    var xmlhttp;
+
+    if(window.XMLHttpRequest)
+    {
+        //code for IE7+,Firefox,Chrome,Opera,Safari
+        xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {
+        //code for IE6,IE5
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function()
+    {
+        if(xmlhttp.readyState==4 && xmlhttp.status==200)
+        {
+            document.getElementById("txtIDA").innerHTML=xmlhttp.responseText;
+            // var divobj = document.getElementById("mytest");
+            // var p = document.createElement("p");
+            // p.innerText = "hello";
+            // divobj.appendChild(p);
+            
+        }
+    }
+    xmlhttp.open("GET","cgi-bin/modbus.cgi?readReg=" + document.getElementById("readReg").value
+         + ",readLen=" + document.getElementById("readLen").value, true);
+    xmlhttp.send();
+}
+
+function readparam()
+{
+    var xmlhttp;
+
+    if(window.XMLHttpRequest)
+    {
+        //code for IE7+,Firefox,Chrome,Opera,Safari
+        xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {
+        //code for IE6,IE5
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function()
+    {
+        if(xmlhttp.readyState==4 && xmlhttp.status==200)
+        {
+            // alert(xmlhttp.responseText);
+            document.getElementById("sysparamvalue").value = xmlhttp.responseText;
+            // var divobj = document.getElementById("mytest");
+            // var p = document.createElement("p");
+            // p.innerText = "hello";
+            // divobj.appendChild(p);     
+        }
+    }
+    xmlhttp.open("GET","cgi-bin/modbus.cgi?sysparam=" + document.getElementById("sysparam").value, true);
+    xmlhttp.send();
+}
+
+function setparam()
+{
+    var xmlhttp;
+
+    if(window.XMLHttpRequest)
+    {
+        //code for IE7+,Firefox,Chrome,Opera,Safari
+        xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {
+        //code for IE6,IE5
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange=function()
+    {
+        if(xmlhttp.readyState==4 && xmlhttp.status==200)
+        {
+            document.getElementById("txtIDA").innerHTML=xmlhttp.responseText;
+            // var divobj = document.getElementById("mytest");
+            // var p = document.createElement("p");
+            // p.innerText = "hello";
+            // divobj.appendChild(p);
+            
+        }
+    }
+    xmlhttp.open("POST", "cgi-bin/modbus.cgi", true);
+    xmlhttp.send("sysparam=" + document.getElementById("sysparam").value
+    + ",sysparamvalue=" + document.getElementById("sysparamvalue").value);
+}
+</script>
+</head>
+ 
+
+ <body>
+ <h1 align="center">Modbus</h1>
+
+  <h2 align="center">Modbus Params Set</h2>
+  <form action="">  
+   <p align="center">Table <input type="text" id="table" name="table"/></p>
+   <p align="center">ID <input type="text" id="id" name="id"/></p>
+   <p align="center">FLAG（0：关闭，1：开启） <input type="text" id="flag"/></p>
+   <p align="center">Modbus地址 <input type="text" id="addr"/></p>
+   <p align="center">寄存器地址 <input type="text" id="register"/></p>
+   <p align="center">长度 <input type="text" id="nums"/></p>
+  </form>
+   <p align="center"><input type="button" value="读取" onclick="get_info()"/>        
+        <input type="button" value="设置" onclick="set_info()"/>  
+   </p>
+
+   <h2 align="center">System Params Set</h2>
+   <form action="">  
+    <p align="center">Param <input type="text" id="sysparam" name="sysparam"/>
+        Value <input type="text" id="sysparamvalue" name="sysparamvalue"/></p>
+   </form>
+    <p align="center"><input type="button" value="读取" onclick="readparam()"/>        
+        <input type="button" value="设置" onclick="setparam()"/> 
+    </p>
+
+   <h2 align="center">Modbus Read</h2>
+   <p align="center">     
+       读取位置 <input type="text" id="readReg"/>
+       长度 <input type="text" id="readLen"/>
+       <input type="button" id="update" value="获取数据" onclick="update()"/>
+    </p>
+
+    <h2 align="center">DI DO</h2>
+    <p align="center">     
+        DO控制 <input type="button" value="闭合" onclick="set_do(1)"/> <input type="button" value="断开" onclick="set_do(0)"/>
+    </p>
+    <p align="center">
+        DI状态 <input type="text" id="DI_Status" />
+    </p>
+
+    <form id="form1" enctype="multipart/form-data" method="post" action="cgi-bin/downfile.cgi">
+    <h2 align="center">OTA Test</h2>
+    <p align="center"> 
+        <input type="file" name="fileToUpload", id="fileToUpload" onchange="fileSelected();" accept=".deb"/>
+        <p align="center">当前软件版本:  <span id="soft_ver"></p> 
+        <div align="center" id="fileName"></div>
+        <div align="center" id="fileSize"></div>
+        <div align="center" id="fileType"></div>
+        <p align="center"> 
+            <input type="button" onclick="uploadFile()" value="Upload" />
+            <div align="center" id="progressNumber"></div>
+        </p>
+    </p>  
+    </form>
+  
+  <p >调试:<span id="txtIDA"></span></p> 
+
+  <div id="mytest">
+  </div>
+ </body>
+
+
+
+
+</html>

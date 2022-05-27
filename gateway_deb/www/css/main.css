@@ -1,0 +1,125 @@
+html, body {  /*并集选择器*/
+    height: 100%;
+}
+
+body {
+    background: url(../img/bg.jpg) 50% 50% no-repeat;
+    background-size: cover;  /*扩展以覆盖窗口*/
+}
+
+.login {
+    width: 350px;
+    height: 450px;
+    background: white;
+    box-shadow: 0px 0px 50px #333;
+    /*这里实现元素的居中有多种实现方法*/
+    position: absolute; /*绝对定位*/
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    padding: 90px 40px;
+    box-sizing: border-box;
+}
+
+.login h3 {  /*后代选择器*/
+    font-size: 24px;
+    margin-bottom: 50px;
+}
+
+.login form .inputBox {  /*后代选择器*/
+    position: relative;
+    height: 40px;
+    display: flex;  /*弹性盒子 中心对齐*/
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.login form .inputBox input {  /*后代选择器*/
+    height: 30px;
+    border: 0px;
+    border-bottom: 1px solid #ccc;
+    flex-grow: 1;  /*扩展占据弹性容器剩余空间*/
+    margin: 10px;
+    padding-left: 5px;
+    /*当焦点落到输入框上时，默认会有轮廓标识其状态，为美观将它删除*/
+    outline: none;
+  }
+
+  .login form .inputBox input:focus {  /*后代+伪类*/
+    border: 1px solid dodgerblue;
+}
+
+.login form .inputBox label {  /*后代选择器*/
+    position: absolute;  /*相对于弹性盒子绝对定位*/
+    padding: 0 3px;
+    left: 40px;
+    top: 20px;  /*父元素高为20*/
+    color: dodgerblue;
+    font-size: 14px;
+    background: #fff;
+    opacity: 0;  /*不透明度*/
+    transition: 0.5s;  /*过渡用时*/
+}
+
+.login form .inputBox input:focus + label {   /*后代+兄弟*/
+    opacity: 1;  /*不透明度*/
+    top: -8px;
+}
+
+.submitButton {
+    display: flex;  /*弹性盒子 中心对齐*/
+    align-items: center;
+}
+
+.submitButton input {  /*后代选择器*/
+    margin: 10% 10%;
+    flex-grow: 1;
+    cursor: pointer;  /*更改光标*/
+    height: 40px;
+    line-height: 40px;
+    background: dodgerblue;
+    color: #fff;
+    border: none;
+    border-radius: 5px;  /*按钮圆角*/
+    outline: none;
+}
+
+.submitButton input:hover {  /*后代+伪类*/
+    box-shadow: 2px 2px 10px #555;
+    transition: 0.3s;
+}
+
+.submitButton input:active {  /*后代+伪类*/
+    box-shadow: none;
+    cursor: wait;  /*更改光标*/
+    outline: none;
+}
+
+@font-face {font-family: "iconfont";
+    src: url('//at.alicdn.com/t/font_2509933_dwa1s66i5ac.eot?t=1619321722072'); /* IE9 */
+    src: url('//at.alicdn.com/t/font_2509933_dwa1s66i5ac.eot?t=1619321722072#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAPwAAsAAAAAB/gAAAOkAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDBgqDYINMATYCJAMMCwgABCAFhG0HNRsRB8gekiSIIAEFAEoBEQuO4Gvst+/uvhhiDZJopPt0EkNSK4EmGhKpkqwEspfAUF42symTQi+nNGbSdJ1NwUtP5BtAcNALfgn5mEF5NbYqOp1G1MUbvdxhksQ9kxhCJBMSIYnYq5b6H8qH1P8hXu3SDvs4gaYRYeBKQVkdsFLQcYE4Y5luYJUyKjWVoS5US5YW8QjM1dOV6hYAHvzfjz8QE1YklYxOXT3I7wNZn+RrB0L4L2hzCUA+nh38KjJmAYXYKHWuI8LkLEJT1ZnVF1YVIY0V+f8fX6YZqiv9x0tEFS1vg0lMJT5JW0zw6ZCScP6rqKKOJwB8E+rACxVlysnZxcamz8lkAy+UhwpF3Uj3JbBmzaJ1UJYbSFGsAyRfkuptFaUx/43N28U8myuyD9ylFFKw8yJ591wSaeFEMNhyf9FDL3joFNwp17kAYf/CgxAOrd0It51ddBoI601j4e54FLsotoyHWcz6ZXnUbiTntKLMiygf2C7ihWIXsOE0ZX9z1m1ahunkq9+7xwPd83CeewAVkO/eEHUPpP733yYdL1rMQspC3nQVO5VPNTOw+AOs1miq4VlEaITVqZq4A1alZcvPLne6WX2wyC+p8we7hTL1i3pbdpSXu7pn+3ZYD9cNW3f4ZruTFeUWV/ePOGHfIaeR/U+/OMPn+c99nL+Al1g1bx5EELsazCGkq7AK5aK9FZBhoEMrZ/rVEDFuV8Ew9rO2LHHIzYVFCQLqmY4tPlQMV8A98TOKYW7u7S0Z2tD6mnB1GhnrusTNl0yLUHKmNjQDdAH4l3cRRj99Pktofu/feP81cqTTPu1rnSrg45DZGAb+FdDerH7zruBnyls2FE1JTbkoMltmuLKdRIGEpqb3C6uhz4v+hsHWcUI9JechqRmGrG6UWKizUNEyB1V189A0o3B1Sz8OIUoD0+YAhB7HIOnyDFmP28RCfQ4VQz5BVU8Q0LQWzlu2jAdL5nKom0d9dM8ozfbqddiy8GRQWYOYQU03l1T6jAbEmdgIHR0Rlc0UIh3ixphhGmJieB7TmNNr6QI4DWk0etrA6QdQLx/Rz/OGlMhIXPZKEb16LSAt4yDdeEgfWo9RNFYvPR3stuaRuZ+vgTAGaXTjauqqkg0QjgnbOS1ahKgWxEKdrlXdtdzHZAgjBo+H0TCOnhatAPIRDQ29pjOUDxqA9OJF6O8RN0gRaTbDbXUR8xu0z7cNmuheOVLkKMo5q+02G9b3IQAA') format('woff2'),
+    url('//at.alicdn.com/t/font_2509933_dwa1s66i5ac.woff?t=1619321722072') format('woff'),
+    url('//at.alicdn.com/t/font_2509933_dwa1s66i5ac.ttf?t=1619321722072') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+    url('//at.alicdn.com/t/font_2509933_dwa1s66i5ac.svg?t=1619321722072#iconfont') format('svg'); /* iOS 4.1- */
+  }
+  
+  .iconfont {
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .icon-mima:before {
+    content: "\e60a";
+  }
+  
+  .icon-wode:before {
+    content: "\e610";
+  }
+  
+  

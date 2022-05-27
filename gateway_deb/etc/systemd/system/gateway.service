@@ -1,0 +1,11 @@
+[Unit]
+Description = gateway
+
+[Service]
+Type = simple
+ExecStart = /home/gateway/gateway.sh
+Restart = always
+
+
+[Install]
+WantedBy = multi-user.target

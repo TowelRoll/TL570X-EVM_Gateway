@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo "......................................................"
+echo "gateway installing"
+echo "......................................................"
+
+systemctl enable gateway
+systemctl start gateway

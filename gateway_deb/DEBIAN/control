@@ -1,0 +1,9 @@
+Package: gateway
+Version: 1.0.0
+Section: free
+Priority: optional
+Essential: no
+Architecture: armhf
+Maintainer: Towel Roll <984093914@qq.com>
+Provides: gateway
+Description: gateway deb
